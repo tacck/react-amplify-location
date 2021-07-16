@@ -29,11 +29,9 @@ function App() {
     });
   });
 
-
   const [place, setPlace] = useState(SAPPORO_LNGLAT);
   useEffect(() => {
     console.log('place useEffect', place);
-    // TODO: マーカー
   }, place);
 
   /**

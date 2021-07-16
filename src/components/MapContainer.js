@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useEffect, useRef, useState } from 'react';
+import maplibregl, { Marker } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import PropTypes from 'prop-types';
 
 import { Signer } from 'aws-amplify';
 import awsconfig from '../aws-exports';
-
 export default function MapContainer(props) {
   const mapName = 'SampleMap';
+  const marker = useRef(new Marker());
 
   const [mapInstance, setMapInstance] = useState(null);
   useEffect(() => {
@@ -21,7 +21,10 @@ export default function MapContainer(props) {
           transformRequest: transformRequest,
         });
         map.addControl(new maplibregl.NavigationControl(), 'top-left');
+        marker.current.setLngLat([props.lnglat[0], props.lnglat[1]]).addTo(map);
+
         map.on('load', () => {
+          console.log('onload');
           map.resize();
         });
 
@@ -31,6 +34,7 @@ export default function MapContainer(props) {
 
     if (props.credentials && mapInstance) {
       mapInstance.setCenter(props.lnglat);
+      marker.current.setLngLat(props.lnglat);
     }
 
     if (!props.credentials) {
